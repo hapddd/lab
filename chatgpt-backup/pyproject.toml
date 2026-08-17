@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chatgpt-backup"
+version = "1.0.0"
+description = "把 ChatGPT 桌面端的最近对话（含图片）备份成 Markdown"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+keywords = ["chatgpt", "backup", "markdown", "export"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Programming Language :: Python :: 3",
+    "Topic :: Utilities",
+]
+# 纯标准库实现，没有第三方依赖。
+dependencies = []
+
+[project.optional-dependencies]
+# 只在读取 Windows 上加密的 Cookie 时可能用到；Linux/macOS 会自动回退到 openssl。
+crypto = ["cryptography>=3.4"]
+
+[project.scripts]
+chatgpt-backup = "chatgpt_backup.cli:main"
+
+[tool.setuptools]
+packages = ["chatgpt_backup", "chatgpt_backup.sources"]
+
+[tool.setuptools.package-data]
+chatgpt_backup = ["py.typed"]
