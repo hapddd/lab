@@ -341,12 +341,15 @@ def _decrypt_chromium_value(
 
 
 def _plaintext_to_str(plain: bytes) -> Optional[str]:
+    """Decode a decrypted cookie value, rejecting garbage from a wrong key."""
     for candidate in (plain, plain[32:]):  # Chrome 130+ prefixes a 32-byte domain hash
         try:
             text = candidate.decode("utf-8")
         except UnicodeDecodeError:
             continue
-        if text and text.isprintable() or (text and "\n" not in text and "\x00" not in text):
+        if not text:
+            continue
+        if text.isprintable() or ("\n" not in text and "\x00" not in text):
             return text
     return None
 

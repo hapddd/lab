@@ -53,6 +53,7 @@ _KIND_STEMS = {
 # Data-export members are named "file-<id>-<original name>"; we re-add a short
 # id ourselves, so drop the long one to keep file names readable.
 _EXPORT_PREFIX = re.compile(r"^file[-_][A-Za-z0-9]{4,}[-_]")
+_ID_PREFIX = re.compile(r"^file[-_]")
 
 
 def clean_asset_name(name: Optional[str]) -> Optional[str]:
@@ -172,7 +173,7 @@ class AssetSaver:
         stem = slugify(stem, max_len=40, fallback="") if stem else ""
         if not stem:
             stem = _KIND_STEMS.get(asset.kind, "file")
-        return f"{stem}-{short_id(asset.file_id.replace('file-', '').replace('file_', ''), 10)}{extension}"
+        return f"{stem}-{short_id(_ID_PREFIX.sub('', asset.file_id), 10)}{extension}"
 
     def save(self, asset: Asset) -> bool:
         if not self.enabled:
